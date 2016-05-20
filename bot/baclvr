@@ -26,13 +26,14 @@ var insult = (function () {
 
 module.exports = function (gu, opts) {
 
-  const ignoreMax = opts.ignoreMax || 30;
+  const ignoreMax = opts.ignoreMax || 3600;
 
   gu.handle(/(.*)/, function (say, message, user) {
     gu.log.info(user + ':', message);
     if (!protection.isIgnored(user)) {
-      if (message.match(/(!.*)/g)) {
+      if (protection.isTooSimilar(user, message)) {
         protection.ignore(user, ignoreMax, gu.log);
+        say(insult());
       }
       else {
         // pass message on to cleverbot
